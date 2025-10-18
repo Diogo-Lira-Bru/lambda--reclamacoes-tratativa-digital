@@ -9,13 +9,8 @@ sqs_client = boto3.client('sqs')
 SQS_QUEUE_URL = os.environ.get('SQS_CENTRAL_URL')
 
 def lambda_handler(event, context):
-    """
-    FunÁ„o Handler do AWS Lambda.
-    Recebe o evento do API Gateway (que contÈm o JSON da requisiÁ„o).
-    """
-    
     # ----------------------------------------------------
-    # 1. RECEP«√O E EXTRA«√O DO PAYLOAD DO API GATEWAY
+    # 1. RECEP√á√ÉO E EXTRA√á√ÉO DO PAYLOAD DO API GATEWAY
     # ----------------------------------------------------
     
     try:
@@ -24,11 +19,11 @@ def lambda_handler(event, context):
         context.log(f"ERRO 400: Falha ao desserializar o JSON do API Gateway. Erro: {e}")
         return {
             'statusCode': 400,
-            'body': json.dumps({'message': 'JSON de entrada inv·lido.'})
+            'body': json.dumps({'message': 'JSON de entrada inv√°lido.'})
         }
 
     # ----------------------------------------------------
-    # 2. VALIDA«√O E PADRONIZA«√O B¡SICA
+    # 2. VALIDA√á√ÉO E PADRONIZA√á√ÉO B√ÅSICA
     # ----------------------------------------------------
 
     customer_id = raw_payload.get('customer_id')
@@ -38,7 +33,7 @@ def lambda_handler(event, context):
         context.log("ERRO 400: Dados de entrada incompletos (ID ou Texto faltando).")
         return {
             'statusCode': 400,
-            'body': json.dumps({'message': 'Dados do cliente ou texto da reclamaÁ„o est„o faltando.'})
+            'body': json.dumps({'message': 'Dados do cliente ou texto da reclama√ß√£o est√£o faltando.'})
         }
 
     standardized_reclamation = {
@@ -69,16 +64,16 @@ def lambda_handler(event, context):
             }
         )
         
-        context.log(f"ReclamaÁ„o {standardized_reclamation['Id']} enviada para o SQS Central. Status: 200")
+        context.log(f"Reclama√ß√£o {standardized_reclamation['Id']} enviada para o SQS Central. Status: 200")
         
         return {
             'statusCode': 200,
-            'body': json.dumps({'id': standardized_reclamation['Id'], 'status': 'Recebido para processamento assÌncrono'})
+            'body': json.dumps({'id': standardized_reclamation['Id'], 'status': 'Recebido para processamento ass√≠ncrono'})
         }
 
     except Exception as e:
-        context.log(f"ERRO CRÕTICO: Falha ao enviar a mensagem para o SQS. Erro: {e}")
+        context.log(f"ERRO CR√çTICO: Falha ao enviar a mensagem para o SQS. Erro: {e}")
         return {
             'statusCode': 500,
-            'body': json.dumps({'message': 'Falha interna ao processar a requisiÁ„o.'})
+            'body': json.dumps({'message': 'Falha interna ao processar a requisi√ß√£o.'})
         }
